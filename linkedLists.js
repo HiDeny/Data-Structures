@@ -12,25 +12,17 @@ const LinkedList = () => {
   return {
     // Adds a new node containing value to the end of the list.
     append(value) {
-      const newNode = Node(value);
-
       if (!head) {
-        head = newNode;
+        head = Node(value);
         return;
       }
 
-      if (!head.next) {
-        head.next = newNode;
-        tail = newNode;
-        return;
+      let currentNode = head;
+      while (currentNode.next) {
+        currentNode = currentNode.next;
       }
-
-      let nextNode = head.next;
-      while (nextNode.next) {
-        nextNode = nextNode.next;
-      }
-      nextNode.next = newNode;
-      tail = newNode;
+      currentNode.next = Node(value);
+      tail = currentNode.next;
     },
 
     // Adds a new node containing value to the start of the list.
@@ -44,14 +36,13 @@ const LinkedList = () => {
       }
 
       newNode.next = head;
-      if (!head.next) head = tail;
+      if (!head.next) tail = head;
       head = newNode;
     },
 
     // Returns the total number of nodes in the list
     get size() {
       if (!head) return 'List is empty';
-      if (!head.next) return 1;
 
       let count = 0;
       let currentNode = head.next;
@@ -76,7 +67,6 @@ const LinkedList = () => {
     // at(index) returns the node at the given index.
     at(index) {
       if (!head || index < 0) return 'List is empty';
-      if (index === 0) return head;
 
       let currentNode = head;
       for (let i = 0; i < index; i += 1) {
@@ -95,8 +85,9 @@ const LinkedList = () => {
         return;
       }
 
-      let currentNode = head;
       let lastNode = null;
+      let currentNode = head;
+
       while (currentNode.next) {
         lastNode = currentNode;
         currentNode = currentNode.next;
@@ -108,8 +99,6 @@ const LinkedList = () => {
     // Returns true if the passed in value is in the list and otherwise returns false.
     contains(value) {
       if (!head) return 'List is empty';
-      if (!head.next && head.value !== value) return false;
-      if (head.value === value) return true;
 
       let currentNode = head;
       while (currentNode) {
@@ -122,8 +111,6 @@ const LinkedList = () => {
     // Returns the index of the node containing value, or null if not found.
     find(value) {
       if (!head) return 'List is empty';
-      if (!head.next && head.value !== value) return null;
-      if (head.value === value) return 0;
 
       let count = 0;
       let currentNode = head;
@@ -213,7 +200,7 @@ list1.append('Third Node');
 list1.prepend('Forth Node');
 list1.prepend('Fifth Node');
 
-console.log(list1.at(0));
+// console.log(list1.at(0));
 // console.log(list1.at(1));
 // console.log(list1.at(2));
 // console.log(list1.at(3));
@@ -221,7 +208,7 @@ console.log(list1.at(0));
 
 // console.log(list1.tail);
 
-// console.log(list1.pop());
+// list1.pop();
 // console.log(list1.size);
 // console.log(list1.tail);
 
@@ -242,9 +229,11 @@ console.log(list1.find('Fifth Node'));
 console.log(list1.find('Node'));
 
 // console.log(list1.toString);
-list1.insertAt('Inserted node', 3);
+// list1.insertAt('Inserted node', 3);
 // console.log(list1.toString);
 
-console.log(list1.toString);
-list1.removeAt(6);
-console.log(list1.toString);
+// console.log(list1.tail);
+// console.log(list1.toString);
+// list1.removeAt(5);
+// console.log(list1.toString);
+// console.log(list1.tail);
