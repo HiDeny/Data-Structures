@@ -200,17 +200,17 @@ list1.append('Third Node');
 list1.prepend('Forth Node');
 list1.prepend('Fifth Node');
 
-// console.log(list1.at(0));
-// console.log(list1.at(1));
-// console.log(list1.at(2));
-// console.log(list1.at(3));
-// console.log(list1.at(4));
+console.log(list1.at(0));
+console.log(list1.at(1));
+console.log(list1.at(2));
+console.log(list1.at(3));
+console.log(list1.at(4));
 
-// console.log(list1.tail);
+console.log(list1.tail);
 
-// list1.pop();
-// console.log(list1.size);
-// console.log(list1.tail);
+list1.pop();
+console.log(list1.size);
+console.log(list1.tail);
 
 console.log(list1.contains('Node'));
 console.log(list1.contains('First Node'));
@@ -228,12 +228,12 @@ console.log(list1.find('Forth Node'));
 console.log(list1.find('Fifth Node'));
 console.log(list1.find('Node'));
 
-// console.log(list1.toString);
-// list1.insertAt('Inserted node', 3);
-// console.log(list1.toString);
+console.log(list1.toString);
+list1.insertAt('Inserted node', 3);
+console.log(list1.toString);
 
-// console.log(list1.tail);
-// console.log(list1.toString);
-// list1.removeAt(5);
-// console.log(list1.toString);
-// console.log(list1.tail);
+console.log(list1.tail);
+console.log(list1.toString);
+list1.removeAt(5);
+console.log(list1.toString);
+console.log(list1.tail);
