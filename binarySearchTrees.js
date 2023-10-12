@@ -162,17 +162,27 @@ const postorderRecursion = (callback, root) => {
 
 //TODO: Height - accepts a node and returns its height.
 //  - Height is defined as the number of edges in longest path from a given node to a leaf node.
-const heightRecursion = (data, root) => {
-  if (root === null) {
-    console.error('Height: Data not found.');
-    return 0;
-  }
+const heightRecursion = (root) => {
+  if (root === null) return -1;
 
-  if (data < root.data) return heightRecursion(data, root.left) + 1;
-  if (data > root.data) return heightRecursion(data, root.right) + 1;
+  const leftHeight = heightRecursion(root.left);
+  const rightHeight = heightRecursion(root.right);
 
-  return 1;
+  return Math.max(leftHeight, rightHeight) + 1;
 };
+
+// Depth?
+// const heightRecursion = (data, root) => {
+//   if (root === null) {
+//     console.error('Height: Data not found.');
+//     return 0;
+//   }
+
+//   if (data < root.data) return heightRecursion(data, root.left) + 1;
+//   if (data > root.data) return heightRecursion(data, root.right) + 1;
+
+//   return 1;
+// };
 
 const Tree = (arr) => {
   const cleanArr = [...new Set(arr.sort((a, b) => a - b))];
@@ -213,7 +223,7 @@ const Tree = (arr) => {
     },
 
     height(data) {
-      return heightRecursion(data, root);
+      return heightRecursion(this.find(data));
     },
 
     //TODO: Depth - accepts a node and returns its depth.
@@ -273,7 +283,7 @@ console.log(newTree.preorder());
 console.log(newTree.inorder(logData));
 console.log(newTree.postorder());
 
-console.log(newTree.height(10));
+console.log(newTree.height(33));
 
 // Tie it all together
 // Write a simple driver script that does the following:
