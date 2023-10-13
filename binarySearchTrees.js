@@ -62,7 +62,7 @@ const deleteRecursive = (dataToDelete, root) => {
   return root;
 };
 
-//TODO: Find function - accepts a value and returns the node with the given value.
+//TODO: Find - accepts a value and returns the node with the given value.
 const findRecursive = (dataToFind, root) => {
   if (root === null) {
     console.error('Find: Data not found');
@@ -162,27 +162,46 @@ const postorderRecursion = (callback, root) => {
 
 //TODO: Height - accepts a node and returns its height.
 //  - Height is defined as the number of edges in longest path from a given node to a leaf node.
+
 const heightRecursion = (root) => {
   if (root === null) return -1;
 
   const leftHeight = heightRecursion(root.left);
   const rightHeight = heightRecursion(root.right);
 
-  return Math.max(leftHeight, rightHeight) + 1;
+  if (leftHeight > rightHeight) return leftHeight + 1;
+  return rightHeight + 1;
 };
 
-// Depth?
-// const heightRecursion = (data, root) => {
-//   if (root === null) {
-//     console.error('Height: Data not found.');
-//     return 0;
-//   }
+//TODO: Depth - accepts a node and returns its depth.
+// - Depth is defined as the number of edges in path from a given node to the tree’s root node.
 
-//   if (data < root.data) return heightRecursion(data, root.left) + 1;
-//   if (data > root.data) return heightRecursion(data, root.right) + 1;
+const depthRecursion = (root, nodeToFind, depth = 0) => {
+  if (root === null) return -1;
 
-//   return 1;
-// };
+  if (root === nodeToFind) return depth;
+
+  const leftDepth = depthRecursion(root.left, nodeToFind, depth + 1);
+  if (leftDepth !== -1) return leftDepth;
+
+  const rightDepth = depthRecursion(root.right, nodeToFind, depth + 1);
+  if (rightDepth !== -1) return rightDepth;
+
+  return -1;
+};
+
+//TODO: isBalanced - checks if the tree is balanced.
+// - A balanced tree is one where the difference between heights of left subtree and right subtree of every node is not more than 1.
+const isBalancedRecursion = (root) => {
+  if (root === null) return [true, 0];
+
+  const leftBalance = isBalancedRecursion(root.left);
+  const rightBalance = isBalancedRecursion(root.right);
+  if (!leftBalance || !rightBalance) return false;
+
+  const balanced = Math.abs(leftBalance[1] - rightBalance[1]) <= 1;
+  return [balanced, 1 + Math.max(leftBalance[1], rightBalance[1])];
+};
 
 const Tree = (arr) => {
   const cleanArr = [...new Set(arr.sort((a, b) => a - b))];
@@ -226,11 +245,13 @@ const Tree = (arr) => {
       return heightRecursion(this.find(data));
     },
 
-    //TODO: Depth - accepts a node and returns its depth.
-    // - Depth is defined as the number of edges in path from a given node to the tree’s root node.
+    depth(data) {
+      return depthRecursion(this.root, this.find(data));
+    },
 
-    //TODO: isBalanced - checks if the tree is balanced.
-    // - A balanced tree is one where the difference between heights of left subtree and right subtree of every node is not more than 1.
+    isBalanced() {
+      return isBalancedRecursion(this.root);
+    },
 
     //TODO: Rebalance - rebalances an unbalanced tree.
     // Tip: You’ll want to use a traversal method to provide a new array to the buildTree function.
@@ -262,28 +283,44 @@ const testArray = [11, 21, 25, 31, 34, 44, 55];
 const newTree = Tree(testArray);
 // prettyPrint(newTree.root);
 
+//? Insert
 newTree.insert(21);
 newTree.insert(22);
 newTree.insert(31);
 newTree.insert(33);
-newTree.insert(10);
+// newTree.insert(10);
+// newTree.insert(12);
+// newTree.insert(13);
 prettyPrint(newTree.root);
 
+//? Delete
 newTree.delete(21);
 newTree.delete(31);
 prettyPrint(newTree.root);
 
-// console.log(newTree.find(22));
-// console.log(newTree.find(10));
+//? Find function
+console.log(newTree.find(22));
+console.log(newTree.find(10));
 
 const logData = (node) => console.log(node.data);
 
-// newTree.levelOrder(logData);
+//? levelOrder
+newTree.levelOrder(logData);
+
+//? Preorder, Inorder, and Postorder
 console.log(newTree.preorder());
 console.log(newTree.inorder(logData));
 console.log(newTree.postorder());
 
-console.log(newTree.height(33));
+//? Height
+console.log(newTree.height(22));
+
+//? Depth
+console.log(newTree.depth(22));
+prettyPrint(newTree.root);
+
+//? isBalanced
+console.log(newTree.isBalanced());
 
 // Tie it all together
 // Write a simple driver script that does the following:
