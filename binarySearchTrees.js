@@ -19,15 +19,15 @@ const buildTree = (arr) => {
 };
 
 //TODO: Insert - accepts a value to insert
-const insertRecursive = (newData, root) => {
+const insertRecursive = (root, newData) => {
   if (root === null) return Node(newData);
   if (newData === root.data) return root;
 
   if (newData < root.data) {
-    root.left = insertRecursive(newData, root.left);
+    root.left = insertRecursive(root.left, newData);
   }
   if (newData > root.data) {
-    root.right = insertRecursive(newData, root.right);
+    root.right = insertRecursive(root.right, newData);
   }
 
   return root;
@@ -35,18 +35,18 @@ const insertRecursive = (newData, root) => {
 
 //TODO:  Delete - accepts a value to delete
 // - you’ll have to deal with several cases for delete such as when a node has children or not
-const deleteRecursive = (dataToDelete, root) => {
+const deleteRecursive = (root, dataToDelete) => {
   if (root === null) {
     console.error('Delete: Data not found');
     return root;
   }
 
   if (dataToDelete < root.data) {
-    root.left = deleteRecursive(dataToDelete, root.left);
+    root.left = deleteRecursive(root.left, dataToDelete);
     return root;
   }
   if (dataToDelete > root.data) {
-    root.right = deleteRecursive(dataToDelete, root.right);
+    root.right = deleteRecursive(root.right, dataToDelete);
     return root;
   }
 
@@ -58,22 +58,22 @@ const deleteRecursive = (dataToDelete, root) => {
   while (tempNode.left !== null) tempNode = tempNode.left;
 
   root.data = tempNode.data;
-  root.right = deleteRecursive(tempNode.data, root.right);
+  root.right = deleteRecursive(root.right, tempNode.data);
   return root;
 };
 
 //TODO: Find - accepts a value and returns the node with the given value.
-const findRecursive = (dataToFind, root) => {
+const findRecursive = (root, dataToFind) => {
   if (root === null) {
     console.error('Find: Data not found');
     return root;
   }
 
   if (dataToFind < root.data) {
-    return findRecursive(dataToFind, root.left);
+    return findRecursive(root.left, dataToFind);
   }
   if (dataToFind > root.data) {
-    return findRecursive(dataToFind, root.right);
+    return findRecursive(root.right, dataToFind);
   }
 
   return root;
@@ -86,7 +86,7 @@ const findRecursive = (dataToFind, root) => {
 // - Tip: You will want to use an array acting as a queue to keep track of all the child nodes that you have yet to traverse and to add new ones to the list
 
 //* Iteration
-const levelOrderIteration = (callback, root) => {
+const levelOrderIteration = (root, callback) => {
   const queue = [root];
   const result = [];
   let currentNode = null;
@@ -103,7 +103,7 @@ const levelOrderIteration = (callback, root) => {
 };
 
 //* Recursion
-const levelOrderRecursion = (callback, queue) => {
+const levelOrderRecursion = (queue, callback) => {
   if (queue.length === 0) return;
 
   const root = queue.shift();
@@ -112,13 +112,15 @@ const levelOrderRecursion = (callback, queue) => {
   if (root.left) queue.push(root.left);
   if (root.right) queue.push(root.right);
 
-  levelOrderRecursion(callback, queue);
+  levelOrderRecursion(queue, callback);
 };
 
 //TODO: Preorder, Inorder, and Postorder - accept a function parameter.
 // - Each of these functions should traverse the tree in their respective depth-first order and yield each node to the provided function given as an argument.
 // - The functions should return an array of values if no function is given.
-const preorderRecursion = (callback, root) => {
+
+//* Preorder
+const preorderRecursion = (root, callback) => {
   if (root === null) return [];
 
   const result = [];
@@ -126,34 +128,36 @@ const preorderRecursion = (callback, root) => {
   // Root -> Left -> Right
   result.push(root.data);
   if (callback) callback(root);
-  if (root.left) result.push(...preorderRecursion(callback, root.left));
-  if (root.right) result.push(...preorderRecursion(callback, root.right));
+  if (root.left) result.push(...preorderRecursion(root.left, callback));
+  if (root.right) result.push(...preorderRecursion(root.right, callback));
 
   return result;
 };
 
-const inorderRecursion = (callback, root) => {
+//* Inorder
+const inorderRecursion = (root, callback) => {
   if (root === null) return [];
 
   const result = [];
 
   // Left -> Root -> Right
-  if (root.left) result.push(...inorderRecursion(callback, root.left));
+  if (root.left) result.push(...inorderRecursion(root.left, callback));
   result.push(root.data);
   if (callback) callback(root);
-  if (root.right) result.push(...inorderRecursion(callback, root.right));
+  if (root.right) result.push(...inorderRecursion(root.right, callback));
 
   return result;
 };
 
-const postorderRecursion = (callback, root) => {
+//* Postorder
+const postorderRecursion = (root, callback) => {
   if (root === null) return [];
 
   const result = [];
 
   // Left -> Right -> Root
-  if (root.left) result.push(...postorderRecursion(callback, root.left));
-  if (root.right) result.push(...postorderRecursion(callback, root.right));
+  if (root.left) result.push(...postorderRecursion(root.left, callback));
+  if (root.right) result.push(...postorderRecursion(root.right, callback));
   result.push(root.data);
   if (callback) callback(root);
 
@@ -203,6 +207,11 @@ const isBalancedRecursion = (root) => {
   return [balanced, 1 + Math.max(leftBalance[1], rightBalance[1])];
 };
 
+//TODO: Rebalance - rebalances an unbalanced tree.
+// Tip: You’ll want to use a traversal method to provide a new array to the buildTree function.
+const rebalance = (root) => buildTree(inorderRecursion(root));
+
+//! Tree factory
 const Tree = (arr) => {
   const cleanArr = [...new Set(arr.sort((a, b) => a - b))];
   let root = buildTree(cleanArr);
@@ -213,32 +222,32 @@ const Tree = (arr) => {
     },
 
     insert(newData) {
-      root = insertRecursive(newData, root);
+      root = insertRecursive(root, newData);
     },
 
     delete(dataToDelete) {
-      root = deleteRecursive(dataToDelete, root);
+      root = deleteRecursive(root, dataToDelete);
     },
 
     find(dataToFind) {
-      return findRecursive(dataToFind, root);
+      return findRecursive(root, dataToFind);
     },
 
     levelOrder(callback) {
-      return levelOrderIteration(callback, root);
+      return levelOrderIteration(root, callback);
       // return levelOrderRecursion(callback, [root]);
     },
 
     preorder(callback) {
-      return preorderRecursion(callback, root);
+      return preorderRecursion(root, callback);
     },
 
     inorder(callback) {
-      return inorderRecursion(callback, root);
+      return inorderRecursion(root, callback);
     },
 
     postorder(callback) {
-      return postorderRecursion(callback, root);
+      return postorderRecursion(root, callback);
     },
 
     height(data) {
@@ -246,15 +255,17 @@ const Tree = (arr) => {
     },
 
     depth(data) {
-      return depthRecursion(this.root, this.find(data));
+      return depthRecursion(root, this.find(data));
     },
 
     isBalanced() {
-      return isBalancedRecursion(this.root);
+      return isBalancedRecursion(root)[0];
     },
 
-    //TODO: Rebalance - rebalances an unbalanced tree.
-    // Tip: You’ll want to use a traversal method to provide a new array to the buildTree function.
+    rebalance() {
+      if (this.isBalanced()) return;
+      root = rebalance(root);
+    },
   };
 };
 
@@ -271,7 +282,7 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
-//?
+//? Testing
 const randomArray = Array.from(
   { length: 10 },
   () => Math.floor(Math.random() * 100) + 1
@@ -289,8 +300,8 @@ newTree.insert(22);
 newTree.insert(31);
 newTree.insert(33);
 // newTree.insert(10);
-// newTree.insert(12);
-// newTree.insert(13);
+newTree.insert(12);
+newTree.insert(13);
 prettyPrint(newTree.root);
 
 //? Delete
@@ -320,6 +331,11 @@ console.log(newTree.depth(22));
 prettyPrint(newTree.root);
 
 //? isBalanced
+console.log(newTree.isBalanced());
+
+//? rebalance
+newTree.rebalance();
+prettyPrint(newTree.root);
 console.log(newTree.isBalanced());
 
 // Tie it all together
