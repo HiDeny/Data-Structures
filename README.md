@@ -15,5 +15,15 @@
 - `removeAt(index)` removes the node at the given index or error message if the list is empty or if the request index is bigger than list size
 
 ## Binary Search Trees
-
-### Balanced
+- `insert(newData)` insert data
+- `delete(dataToDelete)` delete data
+- `find(dataToFind)` returns the node with the given value.
+- `levelOrder(callback)` traverse the tree in level order and provide each node as the argument to the provided function. (Return an array of values if no function is given)
+- `preorder(callback)` traverse the tree in preorder and provide each node as the argument to the provided function. (Return an array of values if no function is given)
+- `inorder(callback)` traverse the tree in  inorder and provide each node as the argument to the provided function. (Return an array of values if no function is given)
+- `postorder(callback)` traverse the tree in  postorder and provide each node as the argument to the provided function. (Return an array of values if no function is given)
+- `height(data)` returns height of data (Largest downwards path from that data to the leaf node)
+- `depth(data)` returns depth of data (Largest upwards path from data to tree root)
+- `isBalanced()` checks if the tree is balanced
+- `rebalance()` rebalances an unbalanced tree
+    
